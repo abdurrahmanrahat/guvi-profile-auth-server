@@ -30,8 +30,17 @@ async function run() {
 
 
         /*----------------------
-            All Collection here
+            Collection & apis
         -----------------------*/
+
+        const usersCollection = client.db('guvi-task').collection('users');
+
+        // post users data to db
+        app.post('/users', async (req, res) => {
+            const newUser = req.body;
+            const result = await usersCollection.insertOne(newUser);
+            res.send(result);
+        })
 
 
 

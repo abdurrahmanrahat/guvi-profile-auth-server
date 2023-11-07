@@ -38,11 +38,26 @@ async function run() {
         // post users data to db
         app.post('/users', async (req, res) => {
             const newUser = req.body;
+
+            const query = { email: newUser.email };
+            const existingUser = await usersCollection.findOne(query);
+            if (existingUser) {
+                return res.send({ message: 'User already exits' });
+            }
+
             const result = await usersCollection.insertOne(newUser);
             res.send(result);
         })
 
-
+        // get user data with email specific
+        app.get('/users', async (req, res) => {
+            let query = {};
+            if (req.query?.email) {
+                query = { email: req.query.email };
+            }
+            const result = await usersCollection.findOne(query);
+            res.send(result);
+        })
 
 
         // Send a ping to confirm a successful connection
